@@ -1,0 +1,6 @@
+# rollNo name department totalClasses attendedClasses
+101 Alice_Smith CSE 40 35
+102 Bob_Jones ECE 40 28
+103 Charlie_Brown ME 40 38
+104 Diana_Prince CSE 40 22
+105 Ethan_Hunt IT 40 32
