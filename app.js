@@ -136,11 +136,7 @@ const StudentStore = (() => {
     };
 })();
 
-// Single-Page Application (SPA) Routing & Scaffold Initialization
-document.addEventListener('DOMContentLoaded', () => {
-    initNavigation();
-    updateDashboardStats();
-});
+// Single-Page Application (SPA) Routing & Scaffold Initialization (handled at end of file)
 
 // Navigation / Section Toggle Routing
 function initNavigation() {
@@ -184,6 +180,7 @@ function initNavigation() {
     menuItems.forEach(item => {
         item.addEventListener('click', () => {
             const sectionName = item.getAttribute('data-section');
+            if (!sectionName) return; // Skip if no data-section (e.g. logout)
             const targetSection = document.getElementById(`sec-${sectionName}`);
 
             if (!targetSection) {
@@ -1360,8 +1357,8 @@ function renderAttendanceChart() {
     const data = students.map(s => s.totalClasses > 0 ? parseFloat(((s.attendedClasses / s.totalClasses) * 100).toFixed(1)) : 0);
 
     // Dynamic coloring based on 75% boundary
-    const backgroundColors = data.map(pct => pct < 75.0 ? 'rgba(244, 63, 94, 0.5)' : 'rgba(139, 92, 246, 0.5)');
-    const borderColors = data.map(pct => pct < 75.0 ? 'rgba(244, 63, 94, 1)' : 'rgba(139, 92, 246, 1)');
+    const backgroundColors = data.map(pct => pct < 75.0 ? 'rgba(239, 68, 68, 0.5)' : 'rgba(59, 130, 246, 0.5)');
+    const borderColors = data.map(pct => pct < 75.0 ? 'rgba(239, 68, 68, 1)' : 'rgba(59, 130, 246, 1)');
 
     attendanceChartInstance = new Chart(ctx, {
         type: 'bar',
@@ -1446,6 +1443,334 @@ function renderAttendanceChart() {
 
 // Entry Point Init
 document.addEventListener('DOMContentLoaded', () => {
+    initAuth();
+});
+
+// ==========================================================================
+// ==========================================================================
+// Faculty Authentication Module
+// ==========================================================================
+
+const FacultyStore = (() => {
+    const STORAGE_KEY = 'attendance_system_faculties';
+    
+    function loadFaculties() {
+        try {
+            const rawData = localStorage.getItem(STORAGE_KEY);
+            if (rawData) {
+                return JSON.parse(rawData);
+            }
+        } catch (e) {
+            console.error("Error loading faculties:", e);
+        }
+        // Return default credential account if empty
+        return [{ email: 'faculty@ams.edu', password: 'password123' }];
+    }
+    
+    let faculties = loadFaculties();
+    
+    // Ensure the default account is in storage
+    if (!localStorage.getItem(STORAGE_KEY)) {
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(faculties));
+        } catch (e) {
+            console.error("Error initializing faculties storage:", e);
+        }
+    }
+    
+    function saveFaculties() {
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(faculties));
+        } catch (e) {
+            console.error("Error saving faculties:", e);
+        }
+    }
+    
+    return {
+        register: (email, password) => {
+            const emailClean = email.trim().toLowerCase();
+            if (faculties.some(f => f.email === emailClean)) {
+                throw new Error("Faculty account with this username/email already exists.");
+            }
+            faculties.push({ email: emailClean, password: password });
+            saveFaculties();
+            return true;
+        },
+        authenticate: (email, password) => {
+            const emailClean = email.trim().toLowerCase();
+            return faculties.some(f => f.email === emailClean && f.password === password);
+        }
+    };
+})();
+
+function initAuth() {
+    const loginContainer = document.getElementById('login-container');
+    const appContainer = document.getElementById('app-container');
+    
+    // Check if session is already active in sessionStorage
+    const isLogged = sessionStorage.getItem('faculty_logged_in') === 'true';
+    
+    if (isLogged) {
+        loginContainer.style.display = 'none';
+        appContainer.style.display = 'flex';
+        // Run standard startup initializations
+        initPortalApp();
+    } else {
+        loginContainer.style.display = 'flex';
+        appContainer.style.display = 'none';
+        setupLoginHandlers();
+    }
+}
+
+function setupLoginHandlers() {
+    const loginView = document.getElementById('login-view-wrapper');
+    const registerView = document.getElementById('register-view-wrapper');
+    const gotoRegisterLink = document.getElementById('link-goto-register');
+    const gotoLoginLink = document.getElementById('link-goto-login');
+    const loginCard = document.getElementById('login-card');
+    
+    // Login form elements
+    const loginForm = document.getElementById('form-login');
+    const loginEmailInput = document.getElementById('login-email');
+    const loginPasswordInput = document.getElementById('login-password');
+    const toggleLoginPasswordBtn = document.getElementById('btn-toggle-password');
+    const loginErrorBanner = document.getElementById('login-error-banner');
+    const loginSubmitBtn = document.getElementById('btn-login-submit');
+    
+    // Registration form elements
+    const registerForm = document.getElementById('form-register');
+    const regEmailInput = document.getElementById('register-email');
+    const regPasswordInput = document.getElementById('register-password');
+    const regConfirmPasswordInput = document.getElementById('register-confirm-password');
+    const toggleRegPasswordBtn = document.getElementById('btn-toggle-reg-password');
+    const regErrorBanner = document.getElementById('register-error-banner');
+    const regErrorMsg = document.getElementById('register-error-msg');
+    const regSuccessBanner = document.getElementById('register-success-banner');
+    const regSubmitBtn = document.getElementById('btn-register-submit');
+
+    // Switch between Login and Registration views
+    if (gotoRegisterLink && loginView && registerView) {
+        gotoRegisterLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            // Clean banners and reset forms
+            loginErrorBanner.style.display = 'none';
+            regErrorBanner.style.display = 'none';
+            regSuccessBanner.style.display = 'none';
+            loginCard.classList.remove('shake');
+            
+            loginForm.reset();
+            registerForm.reset();
+            
+            // Smoothly swap view wrappers
+            loginView.style.display = 'none';
+            registerView.style.display = 'block';
+        });
+    }
+    
+    if (gotoLoginLink && loginView && registerView) {
+        gotoLoginLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            // Clean banners and reset forms
+            loginErrorBanner.style.display = 'none';
+            regErrorBanner.style.display = 'none';
+            regSuccessBanner.style.display = 'none';
+            loginCard.classList.remove('shake');
+            
+            loginForm.reset();
+            registerForm.reset();
+            
+            // Switch views
+            registerView.style.display = 'none';
+            loginView.style.display = 'block';
+        });
+    }
+
+    // Toggle Login Password visibility
+    if (toggleLoginPasswordBtn && loginPasswordInput) {
+        toggleLoginPasswordBtn.addEventListener('click', () => {
+            const currentType = loginPasswordInput.getAttribute('type');
+            if (currentType === 'password') {
+                loginPasswordInput.setAttribute('type', 'text');
+                toggleLoginPasswordBtn.innerHTML = `
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-icon"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                `;
+                toggleLoginPasswordBtn.setAttribute('title', 'Hide password');
+            } else {
+                loginPasswordInput.setAttribute('type', 'password');
+                toggleLoginPasswordBtn.innerHTML = `
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-icon"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                `;
+                toggleLoginPasswordBtn.setAttribute('title', 'Show password');
+            }
+        });
+    }
+
+    // Toggle Register Password visibility
+    if (toggleRegPasswordBtn && regPasswordInput) {
+        toggleRegPasswordBtn.addEventListener('click', () => {
+            const currentType = regPasswordInput.getAttribute('type');
+            if (currentType === 'password') {
+                regPasswordInput.setAttribute('type', 'text');
+                toggleRegPasswordBtn.innerHTML = `
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-icon"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                `;
+                toggleRegPasswordBtn.setAttribute('title', 'Hide password');
+            } else {
+                regPasswordInput.setAttribute('type', 'password');
+                toggleRegPasswordBtn.innerHTML = `
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="eye-icon"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                `;
+                toggleRegPasswordBtn.setAttribute('title', 'Show password');
+            }
+        });
+    }
+
+    // Handle Login Form Submit
+    if (loginForm) {
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const emailVal = loginEmailInput.value.trim();
+            const passVal = loginPasswordInput.value;
+            
+            // Clean states
+            loginErrorBanner.style.display = 'none';
+            loginCard.classList.remove('shake');
+            
+            const isAuth = FacultyStore.authenticate(emailVal, passVal);
+            
+            if (isAuth) {
+                loginSubmitBtn.classList.add('loading');
+                loginSubmitBtn.disabled = true;
+                
+                // Simulate loading state
+                setTimeout(() => {
+                    sessionStorage.setItem('faculty_logged_in', 'true');
+                    
+                    // Transition
+                    const loginContainer = document.getElementById('login-container');
+                    const appContainer = document.getElementById('app-container');
+                    
+                    loginContainer.style.opacity = '0';
+                    loginContainer.style.transition = 'opacity 0.4s ease';
+                    
+                    setTimeout(() => {
+                        loginContainer.style.display = 'none';
+                        loginContainer.style.opacity = '1';
+                        appContainer.style.display = 'flex';
+                        appContainer.style.opacity = '0';
+                        appContainer.style.transition = 'opacity 0.4s ease';
+                        
+                        appContainer.offsetHeight; // reflow
+                        appContainer.style.opacity = '1';
+                        
+                        initPortalApp();
+                        
+                        loginSubmitBtn.classList.remove('loading');
+                        loginSubmitBtn.disabled = false;
+                        loginForm.reset();
+                    }, 400);
+                }, 800);
+            } else {
+                // Failure
+                setTimeout(() => {
+                    loginCard.classList.add('shake');
+                    loginErrorBanner.style.display = 'flex';
+                    document.getElementById('login-error-msg').textContent = 'Incorrect username/email or password.';
+                    
+                    loginPasswordInput.value = '';
+                    loginPasswordInput.focus();
+                    
+                    setTimeout(() => {
+                        loginCard.classList.remove('shake');
+                    }, 400);
+                }, 300);
+            }
+        });
+    }
+
+    // Handle Register Form Submit
+    if (registerForm) {
+        registerForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const emailVal = regEmailInput.value.trim();
+            const passVal = regPasswordInput.value;
+            const confirmVal = regConfirmPasswordInput.value;
+            
+            regErrorBanner.style.display = 'none';
+            regSuccessBanner.style.display = 'none';
+            loginCard.classList.remove('shake');
+            
+            // Password confirmation check
+            if (passVal !== confirmVal) {
+                setTimeout(() => {
+                    loginCard.classList.add('shake');
+                    regErrorBanner.style.display = 'flex';
+                    regErrorMsg.textContent = 'Passwords do not match!';
+                    setTimeout(() => {
+                        loginCard.classList.remove('shake');
+                    }, 400);
+                }, 100);
+                return;
+            }
+            
+            try {
+                // Try registering user in FacultyStore
+                FacultyStore.register(emailVal, passVal);
+                
+                // Registration success
+                regSubmitBtn.classList.add('loading');
+                regSubmitBtn.disabled = true;
+                regSuccessBanner.style.display = 'flex';
+                
+                setTimeout(() => {
+                    // Reset form and redirection
+                    registerForm.reset();
+                    regSubmitBtn.classList.remove('loading');
+                    regSubmitBtn.disabled = false;
+                    
+                    // Pre-fill login input with registered email
+                    loginEmailInput.value = emailVal;
+                    
+                    // Switch back to login form
+                    registerView.style.display = 'none';
+                    loginView.style.display = 'block';
+                }, 1500);
+                
+            } catch (err) {
+                // Duplicate email error
+                setTimeout(() => {
+                    loginCard.classList.add('shake');
+                    regErrorBanner.style.display = 'flex';
+                    regErrorMsg.textContent = err.message || 'Registration failed. Try again.';
+                    
+                    setTimeout(() => {
+                        loginCard.classList.remove('shake');
+                    }, 400);
+                }, 100);
+            }
+        });
+    }
+}
+
+function setupLogoutHandler() {
+    const logoutBtn = document.getElementById('btn-nav-logout');
+    if (!logoutBtn) return;
+    
+    logoutBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        if (confirm('Are you sure you want to log out of the AMS Faculty Portal?')) {
+            sessionStorage.removeItem('faculty_logged_in');
+            window.location.reload();
+        }
+    });
+}
+
+// Consolidate main portal application initializers
+function initPortalApp() {
     initNavigation();
     updateDashboardStats();
     initStudentForm();
@@ -1454,4 +1779,5 @@ document.addEventListener('DOMContentLoaded', () => {
     initSortingSection();
     initAttendanceSection();
     initReportsSection();
-});
+    setupLogoutHandler();
+}
