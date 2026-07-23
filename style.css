@@ -1,23 +1,23 @@
 /* CSS Custom Properties for Design System Tokens */
 :root {
-    --bg-primary: #070913;
-    --bg-secondary: #0c101f;
-    --bg-card: #12182b;
-    --bg-card-hover: #1b223d;
+    --bg-primary: #000000;
+    --bg-secondary: #0a0a0a;
+    --bg-card: #121212;
+    --bg-card-hover: #1c1c1c;
     
-    --border-color: rgba(255, 255, 255, 0.05);
-    --border-glow: rgba(59, 130, 246, 0.2);
+    --border-color: rgba(255, 255, 255, 0.08);
+    --border-glow: rgba(0, 85, 255, 0.25);
     
-    --color-primary: #3b82f6;
-    --color-primary-light: #60a5fa;
-    --color-accent: #0ea5e9;
+    --color-primary: #0055ff;
+    --color-primary-light: #3385ff;
+    --color-accent: #00d2ff;
     --color-success: #10b981;
     --color-danger: #ef4444;
-    --color-warning: #f59e0b;
+    --color-warning: #fbbf24;
     
-    --text-main: #f8fafc;
-    --text-muted: #94a3b8;
-    --text-dark: #475569;
+    --text-main: #ffffff;
+    --text-muted: #a3a3a3;
+    --text-dark: #525252;
     
     --font-heading: 'Outfit', sans-serif;
     --font-body: 'Plus Jakarta Sans', sans-serif;
@@ -26,7 +26,7 @@
     --header-height: 80px;
     
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --shadow-premium: 0 10px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+    --shadow-premium: 0 10px 30px -5px rgba(0, 0, 0, 0.7), 0 8px 16px -6px rgba(0, 0, 0, 0.5);
 }
 
 /* Global Resets & Body Setup */
@@ -913,9 +913,9 @@ h1, h2, h3, h4, h5, h6 {
 /* Active animation classes during sorting */
 .visualizer-element-card.comparing {
     border-color: var(--color-primary);
-    background-color: rgba(59, 130, 246, 0.08);
+    background-color: rgba(0, 85, 255, 0.08);
     transform: scale(1.01);
-    box-shadow: 0 0 10px rgba(59, 130, 246, 0.2);
+    box-shadow: 0 0 10px rgba(0, 85, 255, 0.2);
 }
 
 .visualizer-element-card.comparing .element-bar {
@@ -973,9 +973,9 @@ h1, h2, h3, h4, h5, h6 {
 
 .queue-pill.current {
     border-color: var(--color-primary);
-    background-color: rgba(59, 130, 246, 0.1);
+    background-color: rgba(0, 85, 255, 0.1);
     color: var(--color-primary-light);
-    box-shadow: 0 0 8px rgba(59, 130, 246, 0.15);
+    box-shadow: 0 0 8px rgba(0, 85, 255, 0.15);
 }
 
 /* Active Marking Board */
@@ -1671,4 +1671,40 @@ h1, h2, h3, h4, h5, h6 {
 .auth-toggle-link a:hover {
     color: var(--color-accent);
     text-decoration: underline;
+}
+
+/* Stats Card Highlight (Top Attendee Card) */
+.stat-card-highlight {
+    border-color: rgba(251, 191, 36, 0.2) !important;
+    background: linear-gradient(135deg, var(--bg-secondary), rgba(251, 191, 36, 0.02)) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card-highlight::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 80px;
+    height: 80px;
+    background: radial-gradient(circle, rgba(251, 191, 36, 0.06) 0%, rgba(0,0,0,0) 70%);
+    pointer-events: none;
+}
+
+.text-gold {
+    color: var(--color-warning) !important;
+    font-size: 1.4rem !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 190px;
+}
+
+.stat-details .stat-subtext {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 0.2rem;
+    display: block;
+    font-weight: 500;
 }

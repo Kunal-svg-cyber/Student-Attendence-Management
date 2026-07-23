@@ -223,6 +223,8 @@ function updateDashboardStats() {
     const totalCount = students.length;
     let avgAttendance = 0.0;
     let lowAttendanceCount = 0;
+    let topStudent = null;
+    let topPct = -1;
 
     if (totalCount > 0) {
         let totalPct = 0;
@@ -232,6 +234,16 @@ function updateDashboardStats() {
             if (pct < 75.0) {
                 lowAttendanceCount++;
             }
+            // Find top attendee
+            if (pct > topPct) {
+                topPct = pct;
+                topStudent = s;
+            } else if (pct === topPct && topStudent !== null) {
+                // If tied, prefer the one who attended more lectures total
+                if (s.attendedClasses > topStudent.attendedClasses) {
+                    topStudent = s;
+                }
+            }
         });
         avgAttendance = totalPct / totalCount;
     }
@@ -239,6 +251,20 @@ function updateDashboardStats() {
     document.getElementById('dash-stat-total').textContent = totalCount;
     document.getElementById('dash-stat-avg').textContent = `${avgAttendance.toFixed(1)}%`;
     document.getElementById('dash-stat-low').textContent = lowAttendanceCount;
+
+    // Render top attendee details
+    const topNameEl = document.getElementById('dash-stat-top-name');
+    const topPctEl = document.getElementById('dash-stat-top-pct');
+    if (topNameEl && topPctEl) {
+        if (topStudent) {
+            topNameEl.textContent = topStudent.name;
+            topNameEl.setAttribute('title', `${topStudent.name} (${topStudent.department})`);
+            topPctEl.textContent = `${topPct.toFixed(1)}% Rate (${topStudent.department})`;
+        } else {
+            topNameEl.textContent = 'N/A';
+            topPctEl.textContent = 'No records';
+        }
+    }
 }
 
 // Global active edit session state
@@ -1357,8 +1383,8 @@ function renderAttendanceChart() {
     const data = students.map(s => s.totalClasses > 0 ? parseFloat(((s.attendedClasses / s.totalClasses) * 100).toFixed(1)) : 0);
 
     // Dynamic coloring based on 75% boundary
-    const backgroundColors = data.map(pct => pct < 75.0 ? 'rgba(239, 68, 68, 0.5)' : 'rgba(59, 130, 246, 0.5)');
-    const borderColors = data.map(pct => pct < 75.0 ? 'rgba(239, 68, 68, 1)' : 'rgba(59, 130, 246, 1)');
+    const backgroundColors = data.map(pct => pct < 75.0 ? 'rgba(239, 68, 68, 0.5)' : 'rgba(0, 85, 255, 0.5)');
+    const borderColors = data.map(pct => pct < 75.0 ? 'rgba(239, 68, 68, 1)' : 'rgba(0, 85, 255, 1)');
 
     attendanceChartInstance = new Chart(ctx, {
         type: 'bar',
