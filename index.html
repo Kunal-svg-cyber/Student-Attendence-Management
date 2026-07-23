@@ -187,6 +187,10 @@
                     <div class="theme-pill">
                         <span class="pill-badge">Active Session</span>
                     </div>
+                    <button id="btn-theme-toggle" class="theme-toggle-btn" aria-label="Toggle Day/Night Mode">
+                        <svg class="moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                        <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display: none;"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                    </button>
                 </div>
             </header>
 
@@ -195,7 +199,10 @@
                 <section id="sec-dashboard" class="content-section active">
                     <div class="welcome-card">
                         <div class="welcome-text">
-                            <h3>Manage attendance, search records, and visualize sorting algorithms in real time.</h3>
+                            <h3>Transforming Attendance Into Actionable Insights 🚀</h3>
+                            <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.5rem; line-height: 1.5;">
+                                Leverage powerful data structures to mark, track, search, and visualize student progress seamlessly.
+                            </p>
                         </div>
                         <div class="welcome-illustration">
                             <!-- Visual Graphic -->
@@ -211,6 +218,7 @@
                             <div class="stat-details">
                                 <span class="stat-label">Total Students</span>
                                 <h4 class="stat-value" id="dash-stat-total">0</h4>
+                                <span class="stat-subtext">Active Learners</span>
                             </div>
                         </div>
                         <div class="stat-card">
@@ -220,6 +228,7 @@
                             <div class="stat-details">
                                 <span class="stat-label">Average Attendance</span>
                                 <h4 class="stat-value" id="dash-stat-avg">0.0%</h4>
+                                <span class="stat-subtext">Target Threshold: 75%</span>
                             </div>
                         </div>
                         <div class="stat-card stat-card-highlight">
@@ -229,7 +238,7 @@
                             <div class="stat-details">
                                 <span class="stat-label">Top Attendee 🏆</span>
                                 <h4 class="stat-value text-gold" id="dash-stat-top-name">N/A</h4>
-                                <span class="stat-subtext" id="dash-stat-top-pct">No records</span>
+                                <span class="stat-subtext" id="dash-stat-top-pct">Class Role Model</span>
                             </div>
                         </div>
                         <div class="stat-card">
@@ -239,7 +248,16 @@
                             <div class="stat-details">
                                 <span class="stat-label">Deficient Students</span>
                                 <h4 class="stat-value" id="dash-stat-low">0</h4>
+                                <span class="stat-subtext">Warning Action Required</span>
                             </div>
+                        </div>
+                    </div>
+
+                    <!-- Daily Motivation Tip Widget -->
+                    <div class="dashboard-motivation-banner" style="background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 1.25rem 2rem; display: flex; align-items: center; gap: 1.25rem; box-shadow: var(--shadow-premium); margin-bottom: 2.5rem; transition: var(--transition-smooth);">
+                        <div class="motivation-icon" style="font-size: 1.5rem; animation: pulseGlow 2s infinite alternate;">💡</div>
+                        <div class="motivation-text" style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.5;">
+                            <strong style="color: var(--text-main);">Daily Action Insight:</strong> "Consistent attendance directly correlates with student success and high grading results. Leverage the FIFO Queue to run marking sessions efficiently."
                         </div>
                     </div>
                 </section>

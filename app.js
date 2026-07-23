@@ -1386,6 +1386,12 @@ function renderAttendanceChart() {
     const backgroundColors = data.map(pct => pct < 75.0 ? 'rgba(239, 68, 68, 0.5)' : 'rgba(0, 85, 255, 0.5)');
     const borderColors = data.map(pct => pct < 75.0 ? 'rgba(239, 68, 68, 1)' : 'rgba(0, 85, 255, 1)');
 
+    // Theme dependent axis/grid colors
+    const isLight = document.body.classList.contains('light-theme');
+    const chartGridColor = isLight ? 'rgba(15, 23, 42, 0.06)' : 'rgba(255, 255, 255, 0.04)';
+    const chartLabelColor = isLight ? '#64748b' : '#9ca3af';
+    const chartLegendColor = isLight ? '#0f172a' : '#f3f4f6';
+
     attendanceChartInstance = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -1420,10 +1426,10 @@ function renderAttendanceChart() {
                     min: 0,
                     max: 100,
                     grid: {
-                        color: 'rgba(255,255,255,0.04)'
+                        color: chartGridColor
                     },
                     ticks: {
-                        color: '#9ca3af',
+                        color: chartLabelColor,
                         font: {
                             family: 'Plus Jakarta Sans',
                             size: 11
@@ -1435,7 +1441,7 @@ function renderAttendanceChart() {
                         display: false
                     },
                     ticks: {
-                        color: '#9ca3af',
+                        color: chartLabelColor,
                         font: {
                             family: 'Plus Jakarta Sans',
                             size: 10
@@ -1447,7 +1453,7 @@ function renderAttendanceChart() {
                 legend: {
                     position: 'top',
                     labels: {
-                        color: '#f3f4f6',
+                        color: chartLegendColor,
                         font: {
                             family: 'Plus Jakarta Sans',
                             weight: '600',
@@ -1467,8 +1473,48 @@ function renderAttendanceChart() {
     });
 }
 
+// Theme Initialization & Switcher
+function initTheme() {
+    const themeToggleBtn = document.getElementById('btn-theme-toggle');
+    if (!themeToggleBtn) return;
+
+    // Load persisted theme
+    const savedTheme = localStorage.getItem('ams_theme') || 'dark';
+    const isLight = savedTheme === 'light';
+
+    if (isLight) {
+        document.body.classList.add('light-theme');
+        themeToggleBtn.querySelector('.sun-icon').style.display = 'block';
+        themeToggleBtn.querySelector('.moon-icon').style.display = 'none';
+    } else {
+        document.body.classList.remove('light-theme');
+        themeToggleBtn.querySelector('.sun-icon').style.display = 'none';
+        themeToggleBtn.querySelector('.moon-icon').style.display = 'block';
+    }
+
+    themeToggleBtn.addEventListener('click', () => {
+        const currentlyLight = document.body.classList.toggle('light-theme');
+        const theme = currentlyLight ? 'light' : 'dark';
+        localStorage.setItem('ams_theme', theme);
+
+        if (currentlyLight) {
+            themeToggleBtn.querySelector('.sun-icon').style.display = 'block';
+            themeToggleBtn.querySelector('.moon-icon').style.display = 'none';
+        } else {
+            themeToggleBtn.querySelector('.sun-icon').style.display = 'none';
+            themeToggleBtn.querySelector('.moon-icon').style.display = 'block';
+        }
+
+        // Redraw chart to update axis/grid text colors
+        if (typeof renderAttendanceChart === 'function') {
+            renderAttendanceChart();
+        }
+    });
+}
+
 // Entry Point Init
 document.addEventListener('DOMContentLoaded', () => {
+    initTheme();
     initAuth();
 });
 
