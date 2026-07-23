@@ -457,7 +457,7 @@ function cancelEditMode() {
     if (rollInput) rollInput.disabled = false;
 
     document.getElementById('form-title').textContent = "Register New Student";
-    document.getElementById('form-desc').textContent = "Insert details to register a student record into local memory store.";
+    document.getElementById('form-desc').textContent = "Enter student details below.";
     document.getElementById('btn-submit-student').textContent = "Add Student";
     document.getElementById('btn-cancel-edit').style.display = 'none';
 }

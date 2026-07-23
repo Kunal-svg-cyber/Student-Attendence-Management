@@ -195,8 +195,7 @@
                 <section id="sec-dashboard" class="content-section active">
                     <div class="welcome-card">
                         <div class="welcome-text">
-                            <h3>Ready to organize your lectures?</h3>
-                            <p>Manage courses, batch-mark student presence using queue processing, verify indices via binary search, and visualize sorting algorithms in real time.</p>
+                            <h3>Manage attendance, search records, and visualize sorting algorithms in real time.</h3>
                         </div>
                         <div class="welcome-illustration">
                             <!-- Visual Graphic -->
@@ -251,7 +250,7 @@
                         <div class="card card-form">
                             <div class="card-header-accent">
                                 <h3 id="form-title">Register New Student</h3>
-                                <p id="form-desc">Insert details to register a student record into local memory store.</p>
+                                <p id="form-desc">Enter student details below.</p>
                             </div>
                             <div class="card-body">
                                 <form id="form-student" class="student-form">
@@ -294,7 +293,6 @@
                         <div class="card directory-card">
                             <div class="card-header-accent">
                                 <h3>Student Directory</h3>
-                                <p>Manage and review all registered students in the system.</p>
                             </div>
                             <div class="card-body scroll-x">
                                 <table class="table" id="table-directory">
@@ -323,8 +321,7 @@
                     <div class="search-container-grid">
                         <div class="card card-search-controls">
                             <div class="card-header-accent">
-                                <h3>Lookup Configuration</h3>
-                                <p>Set target Roll No and select the lookup algorithm.</p>
+                                <h3>Search Student</h3>
                             </div>
                             <div class="card-body">
                                 <form id="form-search" class="student-form">
@@ -355,8 +352,7 @@
 
                         <div class="card card-search-results">
                             <div class="card-header-accent">
-                                <h3>Search Outcome & Benchmarks</h3>
-                                <p>Real-time analytics comparing O(n) scan against O(log n) division.</p>
+                                <h3>Search Results</h3>
                             </div>
                             <div class="card-body" id="search-results-area">
                                 <div class="empty-search-state">
@@ -373,8 +369,7 @@
                     <div class="attendance-dashboard">
                         <div class="card card-attendance-init">
                             <div class="card-header-accent">
-                                <h3>Initiate Marking Session</h3>
-                                <p>Initialize a FIFO marking queue by adding roll numbers.</p>
+                                <h3>Mark Attendance</h3>
                             </div>
                             <div class="card-body">
                                 <form id="form-attendance-init" class="student-form">
@@ -398,8 +393,7 @@
 
                         <div class="card card-attendance-marking">
                             <div class="card-header-accent">
-                                <h3>Active Marking Queue</h3>
-                                <p>Mark students Present or Absent in sequential FIFO queue order.</p>
+                                <h3>Active Queue</h3>
                             </div>
                             <div class="card-body" id="attendance-marking-area" style="min-height: 250px; display: flex; align-items: center; justify-content: center;">
                                 <div class="empty-attendance-state" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; color: var(--text-muted); text-align: center;">
@@ -411,8 +405,7 @@
 
                         <div class="card card-attendance-undo-log">
                             <div class="card-header-accent">
-                                <h3>Session Undo Stack (LIFO)</h3>
-                                <p>Pop past decisions off the stack history to revert attendance records.</p>
+                                <h3>Undo Stack</h3>
                             </div>
                             <div class="card-body">
                                 <button id="btn-undo-attendance" class="btn btn-secondary" style="width: 100%; margin-bottom: 1.25rem; gap: 0.5rem;" disabled>
@@ -435,7 +428,6 @@
                         <div class="card card-sorting-controls">
                             <div class="card-header-accent">
                                 <h3>Visualizer Controls</h3>
-                                <p>Choose sorting criteria and trigger the visual algorithm execution.</p>
                             </div>
                             <div class="card-body">
                                 <div class="form-group" style="margin-bottom: 1.5rem;">
@@ -475,8 +467,7 @@
 
                         <div class="card card-visualizer-display" style="flex: 1;">
                             <div class="card-header-accent">
-                                <h3>Database Elements Array</h3>
-                                <p>Visual representation of students. Colors denote comparison and swap actions.</p>
+                                <h3>Database Elements</h3>
                             </div>
                             <div class="card-body">
                                 <div class="visualizer-array-wrapper" id="visualizer-array-wrapper">
@@ -524,8 +515,7 @@
                     <div class="reports-container-grid">
                         <div class="card card-chart">
                             <div class="card-header-accent">
-                                <h3>Attendance Analytics Chart</h3>
-                                <p>Visualizing individual class presence rates mapped to the 75% target threshold.</p>
+                                <h3>Attendance Analytics</h3>
                             </div>
                             <div class="card-body" style="height: 350px; position: relative;">
                                 <canvas id="attendance-bar-chart"></canvas>
@@ -536,8 +526,7 @@
                             <div class="card-header-accent" style="padding-bottom: 0.5rem;">
                                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
                                     <div>
-                                        <h3>Class Records Directory</h3>
-                                        <p>Toggle display filters to check general directories vs deficit listings.</p>
+                                        <h3>Class Records</h3>
                                     </div>
                                     <div class="tab-button-group">
                                         <button class="tab-btn active" id="btn-tab-all-records">All Students</button>
@@ -566,7 +555,6 @@
                     <div class="card" style="margin-bottom: 2.5rem;">
                         <div class="card-header-accent">
                             <h3>Computer Science Abstractions</h3>
-                            <p>Overview of the data structures and algorithms mapped between the C++ Engine and the Web Portal.</p>
                         </div>
                         <div class="card-body">
                             <div class="dsa-grid">
@@ -577,7 +565,6 @@
                                     <div class="dsa-card-content">
                                         <h4>Contiguous Store (std::vector)</h4>
                                         <p><strong>C++ Mapping:</strong> <code>std::vector&lt;Student&gt; students</code><br><strong>JS Mapping:</strong> <code>studentsCache</code> Array</p>
-                                        <small>Maintains Contiguous memory blocks for student lists, enabling $O(1)$ index access. Serves as the primary source array for sorting, rendering directories, and executing queries.</small>
                                     </div>
                                 </div>
 
@@ -588,7 +575,6 @@
                                     <div class="dsa-card-content">
                                         <h4>Hash Index Map (std::unordered_map)</h4>
                                         <p><strong>C++ Mapping:</strong> <code>std::unordered_map&lt;int,int&gt; rollIndex</code><br><strong>JS Mapping:</strong> <code>rollIndex</code> key-value Hash Object</p>
-                                        <small>Maps roll numbers to array indexes. Translates search operations from $O(N)$ linear scans to $O(1)$ average time lookups. Critical for verifying registration duplicates during additions.</small>
                                     </div>
                                 </div>
 
@@ -599,7 +585,6 @@
                                     <div class="dsa-card-content">
                                         <h4>FIFO Session Queue (std::queue)</h4>
                                         <p><strong>C++ Mapping:</strong> <code>std::queue&lt;int&gt; q</code><br><strong>JS Mapping:</strong> <code>attendanceQueue</code> with Array Shift operations</p>
-                                        <small>Processes batches of students in First-In-First-Out order during marking. Ensures students are evaluated in the precise sequence of roll numbers entered by the instructor.</small>
                                     </div>
                                 </div>
 
@@ -610,7 +595,6 @@
                                     <div class="dsa-card-content">
                                         <h4>LIFO Undo Stack (std::stack)</h4>
                                         <p><strong>C++ Mapping:</strong> <code>std::stack&lt;std::pair&lt;int,string&gt;&gt; undoStack</code><br><strong>JS Mapping:</strong> <code>attendanceStack</code> with Array Push/Pop</p>
-                                        <small>Records attendance marks chronologically. Enables LIFO (Last-In-First-Out) undo. Popping from the stack decrements student record increments and shifts elements back into the active marking queue.</small>
                                     </div>
                                 </div>
 
@@ -621,7 +605,6 @@
                                     <div class="dsa-card-content">
                                         <h4>Binary Search (O(log N) Lookup)</h4>
                                         <p><strong>Prerequisite:</strong> Sorted dataset by key (Roll No)</p>
-                                        <small>Halves the search space at each comparison step. Runs in logarithmic time. Unsorted datasets dynamically trigger pre-sorting before execution, comparing $O(N)$ scanning with $O(\log N)$ division.</small>
                                     </div>
                                 </div>
 
@@ -631,8 +614,7 @@
                                     </div>
                                     <div class="dsa-card-content">
                                         <h4>Sorting Visualizer (Bubble vs Merge)</h4>
-                                        <p><strong>Bubble Sort:</strong> $O(N^2)$ (In-place, stable swaps)<br><strong>Merge Sort:</strong> $O(N \log N)$ (Recursive Divide & Merge)</p>
-                                        <small>Compares Bubble Sort's quadratic scaling against Merge Sort's logarithmic recursively split sorting. Visualization color-codes elements during comparison steps, swaps, and sorted alignments.</small>
+                                        <p><strong>Bubble Sort:</strong> $O(N^2)$<br><strong>Merge Sort:</strong> $O(N \log N)$</p>
                                     </div>
                                 </div>
                             </div>
